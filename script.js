@@ -10,7 +10,7 @@
     fechaEvento: new Date('2026-12-18T16:00:00-05:00'), // 18 dic 2026, 4:00 pm (Colombia)
     whatsappNumero: '573228518697',                      // +57 322 851 8697
     direccion: 'Salón de eventos Tu Fiesta, Cra 42h #84b-107, Plaza 85, Barranquilla',
-    mapsQuery: 'Salón de eventos Tu Fiesta, Cra 42h #84b-107, Plaza 85, Barranquilla, Atlántico, Colombia'
+    mapsUrl: 'https://maps.app.goo.gl/qVVEtSip1xRqS7B37'  // ubicación exacta (Plaza 85)
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -61,10 +61,10 @@
     const jitter = (Math.random() * 10) - 5;
     wrap.style.left = `calc(${leftPct + jitter}%)`;
 
-    const escala = 0.75 + Math.random() * 0.5;
-    const duracion = 5 + Math.random() * 3;
-    const retraso = Math.random() * 0.8;
-    const derivaX = (Math.random() * 80) - 40;
+    const escala = 0.8 + Math.random() * 0.5;
+    const duracion = 9 + Math.random() * 4;   // más lento: 9 a 13 s
+    const retraso = Math.random() * 1.2;       // salen escalonados
+    const derivaX = (Math.random() * 70) - 35;
 
     const body = document.createElement('div');
     body.className = 'balloon-body';
@@ -82,15 +82,18 @@
 
     wrap.appendChild(body);
 
-    const subida = (window.innerHeight || 800) + 260;
+    const alto = window.innerHeight || 800;
+    // Suben hasta ~2/3 de la pantalla, flotan un rato y recién al final se desvanecen
+    const subidaMedia = alto * 0.45;
+    const subidaFinal = alto * 0.72;
     wrap.animate(
       [
-        { transform: `translate3d(0, 0, 0) scale(${escala}) rotate(0deg)`, opacity: 0 },
-        { opacity: 1, offset: 0.08 },
-        { transform: `translate3d(${derivaX * 0.5}px, ${-subida * 0.5}px, 0) scale(${escala}) rotate(-6deg)`, offset: 0.5 },
-        { transform: `translate3d(${derivaX}px, ${-subida}px, 0) scale(${escala}) rotate(6deg)`, opacity: 1 }
+        { transform: `translate3d(0, 0, 0) scale(${escala}) rotate(0deg)`, opacity: 0, offset: 0 },
+        { transform: `translate3d(${derivaX * 0.3}px, ${-subidaMedia}px, 0) scale(${escala}) rotate(-6deg)`, opacity: 1, offset: 0.35 },
+        { transform: `translate3d(${derivaX * 0.7}px, ${-subidaFinal}px, 0) scale(${escala}) rotate(5deg)`, opacity: 1, offset: 0.8 },
+        { transform: `translate3d(${derivaX}px, ${-subidaFinal - 40}px, 0) scale(${escala}) rotate(6deg)`, opacity: 0, offset: 1 }
       ],
-      { duration: duracion * 1000, delay: retraso * 1000, easing: 'cubic-bezier(.33,.0,.2,1)', fill: 'forwards' }
+      { duration: duracion * 1000, delay: retraso * 1000, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'forwards' }
     ).onfinish = () => wrap.remove();
 
     balloonLayer.appendChild(wrap);
@@ -133,7 +136,7 @@
 
     invitation.hidden = false;
 
-    const espera = prefersReduced ? 400 : 1500;
+    const espera = prefersReduced ? 500 : 4200; // deja apreciar los globos subiendo
     setTimeout(() => {
       welcome.classList.add('hide');
       setTimeout(() => {
@@ -173,7 +176,7 @@
      4) MAPA / UBICACIÓN
      ============================================================ */
   const mapBtn = $('#map-btn');
-  mapBtn.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(CONFIG.mapsQuery);
+  mapBtn.href = CONFIG.mapsUrl;
 
   /* ============================================================
      5) STEPPER (cantidad de personas)
@@ -203,7 +206,7 @@
     const personas = cantidad === 1 ? '1 persona' : cantidad + ' personas';
 
     const msg =
-      '🎀🤡 *¡Confirmo mi asistencia al primer añito de Salma!* 🤡🎀\n\n' +
+      '🎀🎈 *¡Confirmo mi asistencia al primer añito de Salma!* 🎈🎀\n\n' +
       '👤 De parte de: ' + quien + '\n' +
       '👥 Asistimos: ' + personas + '\n' +
       '📅 Viernes 18 de diciembre de 2026 · 4:00 p. m.\n' +

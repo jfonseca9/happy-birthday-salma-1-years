@@ -1,4 +1,4 @@
-# 🎀 Salma cumple 1 añito 🤡
+# 🎀 Salma cumple 1 añito 🎈
 
 Invitación web interactiva y animada para el primer añito de **Salma**, con temática del payaso **Plim Plim** en tonos rosa pastel.
 
