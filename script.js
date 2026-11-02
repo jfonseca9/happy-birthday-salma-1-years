@@ -10,9 +10,12 @@
     fechaEvento: new Date('2026-12-18T16:00:00-05:00'), // 18 dic 2026, 4:00 pm (Colombia)
     whatsappNumero: '573228518697',                      // +57 322 851 8697
     direccion: 'Salón de eventos Tu Fiesta, Cra 42h #84b-87, Plaza 85, Barranquilla',
-    // CID (identificador único del lugar en Maps, extraído de tu enlace).
-    // Abre "Plaza 85" con su nombre y pin exacto, en app y navegador.
-    mapsUrl: 'https://www.google.com/maps?cid=8378252953582314457'
+    // Formato oficial multiplataforma (app Android/iOS y navegador): nombre del
+    // lugar como texto de búsqueda. Coordenadas exactas de respaldo por si la
+    // app prefiere el punto. Se arma abajo.
+    mapsQuery: 'Plaza 85, Barranquilla',
+    mapsLat: '10.998117',
+    mapsLng: '-74.8225949'
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -216,7 +219,10 @@
      4) MAPA / UBICACIÓN
      ============================================================ */
   const mapBtn = $('#map-btn');
-  mapBtn.href = CONFIG.mapsUrl;
+  // Formato oficial de la API de Maps (funciona en app Android/iOS y navegador).
+  // query = nombre del lugar -> muestra "Plaza 85" con su etiqueta.
+  mapBtn.href = 'https://www.google.com/maps/search/?api=1&query=' +
+    encodeURIComponent(CONFIG.mapsQuery);
   // En móvil, abrir en la misma pestaña deja que el SO entregue el enlace a la
   // app de Maps sin la pestaña intermedia que a veces causa el error de "no
   // puede abrir el vínculo". En escritorio se mantiene la pestaña nueva.
