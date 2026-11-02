@@ -54,43 +54,34 @@ body {
 }
 img { max-width: 100%; display: block; }
 
-/* Utilidad glass */
+/* Utilidad glass
+   NOTA: usábamos backdrop-filter: blur() pero, combinado con el fondo fijo de
+   orbes, hacía que el navegador recalculara el desenfoque en CADA frame del
+   scroll -> scroll lentísimo en PC y móvil. Lo reemplazamos por un fondo
+   semitransparente sólido: se ve casi igual (transparencia + borde + sombra)
+   pero NO cuesta nada al scrollear. */
 .glass {
-  background: rgba(255, 255, 255, 0.82); /* fallback sólido si no hay backdrop-filter */
+  background: rgba(255, 255, 255, 0.78);
   border: 1px solid var(--glass-border);
   box-shadow: var(--sombra-card);
 }
-/* Solo aplicar el blur (costoso) si el navegador lo soporta de verdad */
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px) saturate(130%);
-    -webkit-backdrop-filter: blur(10px) saturate(130%);
-  }
-}
 
-/* ============ ORBES DE FONDO ANIMADOS ============ */
+/* ============ ORBES DE FONDO (estáticos) ============
+   Un fondo fijo con blur NO cuesta si no se anima. Antes se animaban y eso,
+   junto con los backdrop-filter, saturaba el render en cada scroll. */
 .bg-orbs {
   position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-  contain: strict;            /* aísla el repintado del resto de la página */
 }
 .orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(40px);
-  opacity: .5;
-  transform: translateZ(0);   /* capa propia en GPU */
-  will-change: transform;
-  animation: orbMove 22s ease-in-out infinite alternate;
+  opacity: .45;
 }
-.orb-1 { width: 300px; height: 300px; background: var(--rosa-4); top: -60px; left: -60px; animation-delay: 0s; }
-.orb-2 { width: 260px; height: 260px; background: var(--lila); top: 30%; right: -80px; animation-delay: 3s; }
-.orb-3 { width: 240px; height: 240px; background: var(--celeste); bottom: 10%; left: -70px; animation-delay: 6s; }
-.orb-4 { width: 280px; height: 280px; background: var(--rosa-5); bottom: -80px; right: -40px; animation-delay: 9s; }
-@keyframes orbMove {
-  from { transform: translate3d(0,0,0) scale(1); }
-  to   { transform: translate3d(40px, -30px, 0) scale(1.12); }
-}
+.orb-1 { width: 300px; height: 300px; background: var(--rosa-4); top: -60px; left: -60px; }
+.orb-2 { width: 260px; height: 260px; background: var(--lila); top: 30%; right: -80px; }
+.orb-3 { width: 240px; height: 240px; background: var(--celeste); bottom: 10%; left: -70px; }
+.orb-4 { width: 280px; height: 280px; background: var(--rosa-5); bottom: -80px; right: -40px; }
 
 /* ============ BARRA DE PROGRESO ============ */
 .scroll-progress {
@@ -115,9 +106,7 @@ img { max-width: 100%; display: block; }
   width: 50px; height: 50px;
   border: 1px solid var(--glass-border);
   border-radius: 50%;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
   color: var(--rosa-fuerte);
   box-shadow: var(--sombra-suave);
   cursor: pointer;
@@ -607,31 +596,15 @@ img { max-width: 100%; display: block; }
   }
 }
 
-/* ====== Optimización móvil: scroll fluido ======
-   En móvil, el backdrop-filter + orbes animados + blur son la causa
-   principal del lag al hacer scroll. Los simplificamos sin perder el look. */
+/* ====== Ajustes móvil ====== */
 @media (max-width: 520px) {
   .dot-nav { display: none; }
 
-  /* Tarjetas con fondo sólido semitransparente en vez de blur en vivo */
-  .glass {
-    background: rgba(255, 255, 255, 0.86);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-  /* Orbes estáticos y con menos blur: dejan de repintarse en cada frame */
-  .orb { animation: none; filter: blur(32px); opacity: .45; }
-
-  /* ---- Portada (welcome) más ligera en móvil ---- */
-  /* El glow con blur animado era costoso: lo dejamos fijo y suave */
-  .heart-glow { animation: none; filter: blur(18px); opacity: .5; }
-  /* El corazón en su propia capa GPU para que el latido no repinte el resto */
-  .heart-frame { transform: translateZ(0); }
-  /* Menos elementos flotando a la vez para no saturar el hilo de render */
+  /* Portada más ligera: menos elementos animados a la vez */
+  .heart-glow { filter: blur(16px); opacity: .5; }
   .floatie.f3, .floatie.f5 { display: none; }
-  /* Sparkles sin animación (son decorativos) */
   .heart-sparkle { animation: none; }
-  /* El brillo que recorre el botón es costoso en móvil; lo quitamos */
+  /* El brillo que recorre el botón lo quitamos en móvil */
   .tap-pill::before { display: none; }
 }
 
