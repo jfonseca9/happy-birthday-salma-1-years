@@ -32,7 +32,12 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  /* El smooth scroll global interfiere con el arrastre táctil en móvil y da
+     sensación de "pegado"; el desplazamiento suave de los dots se maneja en JS. */
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
 
 body {
   font-family: var(--fuente-texto);
@@ -43,6 +48,9 @@ body {
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   position: relative;
+  /* Scroll vertical suave y sin rebote lateral molesto en móvil */
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
 }
 img { max-width: 100%; display: block; }
 
@@ -164,6 +172,17 @@ img { max-width: 100%; display: block; }
 }
 .dot:hover::after { opacity: 1; }
 
+/* Mientras la portada está activa, congelar el documento (evita el rebote táctil
+   y el "salto" por la barra de direcciones del navegador móvil) */
+body.welcome-lock {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
 /* ============ PANTALLA DE BIENVENIDA ============ */
 .welcome {
   position: fixed;
@@ -173,6 +192,9 @@ img { max-width: 100%; display: block; }
   place-items: center;
   text-align: center;
   padding: 24px;
+  overscroll-behavior: contain;
+  -webkit-tap-highlight-color: transparent;
+  will-change: opacity, transform;
   background:
     radial-gradient(circle at 20% 15%, var(--lila) 0%, transparent 45%),
     radial-gradient(circle at 85% 20%, var(--celeste) 0%, transparent 40%),
@@ -189,14 +211,15 @@ img { max-width: 100%; display: block; }
 .floatie {
   position: absolute; font-size: 1.8rem;
   animation: floatUpDown 4s ease-in-out infinite;
-  filter: drop-shadow(0 4px 6px rgba(255,111,176,.3));
+  will-change: transform;
+  transform: translateZ(0);
 }
 .f1 { top: 5%; left: 8%; animation-delay: 0s; }
 .f2 { top: 12%; right: 10%; animation-delay: .8s; }
 .f3 { top: 60%; left: 2%; animation-delay: 1.5s; }
 .f4 { top: 68%; right: 4%; animation-delay: .4s; font-size: 2.2rem; }
 .f5 { top: 40%; right: 0%; animation-delay: 2s; }
-@keyframes floatUpDown { 0%,100% { transform: translateY(0) rotate(-4deg);} 50% { transform: translateY(-16px) rotate(4deg);} }
+@keyframes floatUpDown { 0%,100% { transform: translate3d(0,0,0) rotate(-4deg);} 50% { transform: translate3d(0,-16px,0) rotate(4deg);} }
 
 .welcome-greet {
   font-family: var(--fuente-deco);
@@ -318,13 +341,6 @@ img { max-width: 100%; display: block; }
   text-align: center;
   position: relative;
 }
-/* No renderizar secciones fuera de pantalla hasta acercarse (scroll más fluido).
-   El hero queda excluido para que se pinte de inmediato al abrir. */
-.countdown, .details, .gift, .rsvp {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
-
 [data-reveal] {
   opacity: 0;
   transform: translate3d(0, 40px, 0);
@@ -409,6 +425,8 @@ img { max-width: 100%; display: block; }
 .hero-photo {
   position: relative;
   width: 100%;
+  aspect-ratio: 1164 / 1351;   /* reserva el espacio: evita saltos al cargar */
+  object-fit: cover;
   border-radius: 28px;
   box-shadow: var(--sombra-card);
   border: 6px solid #fff;
@@ -558,6 +576,16 @@ img { max-width: 100%; display: block; }
   }
   /* Orbes estáticos y con menos blur: dejan de repintarse en cada frame */
   .orb { animation: none; filter: blur(32px); opacity: .45; }
+
+  /* ---- Portada (welcome) más ligera en móvil ---- */
+  /* El glow con blur animado era costoso: lo dejamos fijo y suave */
+  .heart-glow { animation: none; filter: blur(18px); opacity: .5; }
+  /* El corazón en su propia capa GPU para que el latido no repinte el resto */
+  .heart-frame { transform: translateZ(0); }
+  /* Menos elementos flotando a la vez para no saturar el hilo de render */
+  .floatie.f3, .floatie.f5 { display: none; }
+  /* Sparkles sin animación (son decorativos) */
+  .heart-sparkle { animation: none; }
 }
 
 @media (min-width: 720px) {

@@ -166,7 +166,7 @@
       welcome.classList.add('hide');
       setTimeout(() => {
         welcome.style.display = 'none';
-        document.body.style.overflow = '';
+        document.body.classList.remove('welcome-lock'); // liberar el scroll
         if (dotNav) dotNav.classList.add('show');
         revealOnScroll();
         actualizarProgreso();
@@ -175,7 +175,8 @@
   }
 
   heartBtn.addEventListener('click', abrirInvitacion);
-  document.body.style.overflow = 'hidden';
+  // Congelar el documento mientras está la portada (evita rebote/salto táctil en móvil)
+  document.body.classList.add('welcome-lock');
 
   /* ============================================================
      3) CUENTA REGRESIVA
