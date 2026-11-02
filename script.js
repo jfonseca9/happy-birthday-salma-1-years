@@ -10,9 +10,10 @@
     fechaEvento: new Date('2026-12-18T16:00:00-05:00'), // 18 dic 2026, 4:00 pm (Colombia)
     whatsappNumero: '573228518697',                      // +57 322 851 8697
     direccion: 'Salón de eventos Tu Fiesta, Cra 42h #84b-107, Plaza 85, Barranquilla',
-    // Formato oficial de la API de Maps: funciona igual en la app y el navegador,
-    // en Android e iOS. Coordenadas exactas del lugar (Plaza 85).
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=10.998117%2C-74.8225949'
+    // Coma SIN codificar: la app de Google Maps rechaza el %2C y muestra
+    // "no puede abrir el vínculo". Este formato ?q=lat,lng lo abren bien
+    // la app (Android/iOS) y el navegador.
+    mapsUrl: 'https://www.google.com/maps?q=10.998117,-74.8225949'
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -217,6 +218,14 @@
      ============================================================ */
   const mapBtn = $('#map-btn');
   mapBtn.href = CONFIG.mapsUrl;
+  // En móvil, abrir en la misma pestaña deja que el SO entregue el enlace a la
+  // app de Maps sin la pestaña intermedia que a veces causa el error de "no
+  // puede abrir el vínculo". En escritorio se mantiene la pestaña nueva.
+  const esMovil = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (esMovil) {
+    mapBtn.removeAttribute('target');
+    mapBtn.removeAttribute('rel');
+  }
 
   /* ============================================================
      5) WHATSAPP
