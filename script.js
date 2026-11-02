@@ -9,11 +9,10 @@
   const CONFIG = {
     fechaEvento: new Date('2026-12-18T16:00:00-05:00'), // 18 dic 2026, 4:00 pm (Colombia)
     whatsappNumero: '573228518697',                      // +57 322 851 8697
-    direccion: 'Salón de eventos Tu Fiesta, Cra 42h #84b-107, Plaza 85, Barranquilla',
-    // Coma SIN codificar: la app de Google Maps rechaza el %2C y muestra
-    // "no puede abrir el vínculo". Este formato ?q=lat,lng lo abren bien
-    // la app (Android/iOS) y el navegador.
-    mapsUrl: 'https://www.google.com/maps?q=10.998117,-74.8225949'
+    direccion: 'Salón de eventos Tu Fiesta, Cra 42h #84b-87, Plaza 85, Barranquilla',
+    // Búsqueda por texto: Maps muestra el nombre/dirección del lugar (no las
+    // coordenadas crudas). Se arma más abajo con encodeURIComponent.
+    mapsQuery: 'Cra 42h #84b-87, Plaza 85, Barranquilla, Atlántico'
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -217,7 +216,8 @@
      4) MAPA / UBICACIÓN
      ============================================================ */
   const mapBtn = $('#map-btn');
-  mapBtn.href = CONFIG.mapsUrl;
+  // Búsqueda por texto -> Maps muestra la dirección, no coordenadas crudas.
+  mapBtn.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(CONFIG.mapsQuery);
   // En móvil, abrir en la misma pestaña deja que el SO entregue el enlace a la
   // app de Maps sin la pestaña intermedia que a veces causa el error de "no
   // puede abrir el vínculo". En escritorio se mantiene la pestaña nueva.
@@ -240,7 +240,7 @@
       '🎀🎈 *¡Confirmo mi asistencia al primer añito de Salma!* 🎈🎀\n\n' +
       '👤 De parte de: ' + quien + '\n' +
       '📅 Viernes 18 de diciembre de 2026 · 4:00 p. m.\n' +
-      '📍 Salón de eventos Tu Fiesta · Cra 42h #84b-107 · Plaza 85 · Barranquilla\n\n' +
+      '📍 Salón de eventos Tu Fiesta · Cra 42h #84b-87 · Plaza 85 · Barranquilla\n\n' +
       '¡Qué emoción celebrar con Salma! 🎂💕🎈';
 
     return encodeURIComponent(msg);

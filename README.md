@@ -16,7 +16,7 @@ Invitación web interactiva y animada para el primer añito de **Salma**, con te
 ## 📅 El evento
 
 - **Fecha:** Viernes 18 de diciembre de 2026, 4:00 p. m.
-- **Lugar:** Salón de eventos Tu Fiesta · Cra 42h #84b-107 · Plaza 85 · Barranquilla
+- **Lugar:** Salón de eventos Tu Fiesta · Cra 42h #84b-87 · Plaza 85 · Barranquilla
 
 ## 🚀 Ver en local
 
