@@ -179,36 +179,17 @@
   mapBtn.href = CONFIG.mapsUrl;
 
   /* ============================================================
-     5) STEPPER (cantidad de personas)
-     ============================================================ */
-  const guestCount = $('#guest-count');
-  const btnPlus = $('#plus');
-  const btnMinus = $('#minus');
-  const MIN = 1, MAX = 20;
-
-  function clampCount(v) {
-    v = parseInt(v, 10);
-    if (isNaN(v)) v = MIN;
-    return Math.min(MAX, Math.max(MIN, v));
-  }
-  btnPlus.addEventListener('click', () => { guestCount.value = clampCount(clampCount(guestCount.value) + 1); });
-  btnMinus.addEventListener('click', () => { guestCount.value = clampCount(clampCount(guestCount.value) - 1); });
-
-  /* ============================================================
-     6) WHATSAPP
+     5) WHATSAPP
      ============================================================ */
   const waBtn = $('#whatsapp-btn');
 
   function construirMensaje() {
     const nombre = ($('#guest-name').value || '').trim();
-    const cantidad = clampCount(guestCount.value);
     const quien = nombre ? nombre : 'Un invitado';
-    const personas = cantidad === 1 ? '1 persona' : cantidad + ' personas';
 
     const msg =
       '🎀🎈 *¡Confirmo mi asistencia al primer añito de Salma!* 🎈🎀\n\n' +
       '👤 De parte de: ' + quien + '\n' +
-      '👥 Asistimos: ' + personas + '\n' +
       '📅 Viernes 18 de diciembre de 2026 · 4:00 p. m.\n' +
       '📍 Salón de eventos Tu Fiesta · Cra 42h #84b-107 · Plaza 85 · Barranquilla\n\n' +
       '¡Qué emoción celebrar con Salma! 🎂💕🎈';
