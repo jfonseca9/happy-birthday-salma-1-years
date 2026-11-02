@@ -81,8 +81,8 @@
     wrap.style.left = `calc(${leftPct + jitter}%)`;
 
     const escala = 0.8 + Math.random() * 0.5;
-    const duracion = 9 + Math.random() * 4;   // más lento: 9 a 13 s
-    const retraso = Math.random() * 1.2;       // salen escalonados
+    const duracion = 4.5 + Math.random() * 2.5; // 4.5 a 7 s: se aprecia subir sin ser lento
+    const retraso = Math.random() * 0.9;         // salen escalonados
     const derivaX = (Math.random() * 70) - 35;
 
     const body = document.createElement('div');
@@ -102,25 +102,28 @@
     wrap.appendChild(body);
 
     const alto = window.innerHeight || 800;
-    // Suben hasta ~2/3 de la pantalla, flotan un rato y recién al final se desvanecen
-    const subidaMedia = alto * 0.45;
-    const subidaFinal = alto * 0.72;
+    // Suben por toda la pantalla hasta salir por arriba (efecto "vuelan al cielo")
+    const subida = alto + 200;
     wrap.animate(
       [
         { transform: `translate3d(0, 0, 0) scale(${escala}) rotate(0deg)`, opacity: 0, offset: 0 },
-        { transform: `translate3d(${derivaX * 0.3}px, ${-subidaMedia}px, 0) scale(${escala}) rotate(-6deg)`, opacity: 1, offset: 0.35 },
-        { transform: `translate3d(${derivaX * 0.7}px, ${-subidaFinal}px, 0) scale(${escala}) rotate(5deg)`, opacity: 1, offset: 0.8 },
-        { transform: `translate3d(${derivaX}px, ${-subidaFinal - 40}px, 0) scale(${escala}) rotate(6deg)`, opacity: 0, offset: 1 }
+        { opacity: 1, offset: 0.1 },
+        { transform: `translate3d(${derivaX * 0.5}px, ${-subida * 0.55}px, 0) scale(${escala}) rotate(-6deg)`, opacity: 1, offset: 0.55 },
+        { transform: `translate3d(${derivaX}px, ${-subida}px, 0) scale(${escala}) rotate(6deg)`, opacity: 1, offset: 1 }
       ],
-      { duration: duracion * 1000, delay: retraso * 1000, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'forwards' }
+      { duration: duracion * 1000, delay: retraso * 1000, easing: 'cubic-bezier(.33,0,.3,1)', fill: 'forwards' }
     ).onfinish = () => wrap.remove();
 
     balloonLayer.appendChild(wrap);
   }
 
   function lanzarGlobos() {
-    const total = prefersReduced ? 6 : 16;
+    const total = prefersReduced ? 6 : 14;
     for (let i = 0; i < total; i++) crearGlobo(i, total);
+    // Segunda oleada un poco después para que el cielo se llene de globos
+    if (!prefersReduced) {
+      setTimeout(() => { for (let i = 0; i < 10; i++) crearGlobo(i, 10); }, 900);
+    }
   }
 
   function lanzarConfeti() {
@@ -177,8 +180,9 @@
       lanzarConfeti();
     });
 
-    // La portada se cierra sola tras un momento (deja ver los globos)
-    const espera = prefersReduced ? 400 : 2200;
+    // La portada se cierra sola tras un momento. Los globos siguen volando
+    // sobre el contenido porque su capa es independiente (fixed).
+    const espera = prefersReduced ? 400 : 2800;
     cerrarTimer = setTimeout(cerrarPortada, espera);
   }
 

@@ -328,7 +328,7 @@ img { max-width: 100%; display: block; }
 @keyframes tapArrow { 0%,100% { transform: translateX(0);} 50% { transform: translateX(4px);} }
 
 /* ============ GLOBOS QUE VUELAN ============ */
-.balloon-layer { position: absolute; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
+.balloon-layer { position: fixed; inset: 0; pointer-events: none; z-index: 55; overflow: hidden; }
 .balloon { position: absolute; bottom: 60px; width: 92px; will-change: transform, opacity; }
 .balloon-body {
   position: relative;
