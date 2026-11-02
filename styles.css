@@ -33,9 +33,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html {
-  /* El smooth scroll global interfiere con el arrastre táctil en móvil y da
-     sensación de "pegado"; el desplazamiento suave de los dots se maneja en JS. */
   -webkit-text-size-adjust: 100%;
+  /* El scroll vertical lo maneja el viewport (html). Evitamos scroll horizontal
+     aquí, NO en el body: poner overflow en el body lo convierte en su propio
+     contenedor de scroll y rompe la rueda del mouse y el gesto táctil. */
   overflow-x: hidden;
 }
 
@@ -43,14 +44,10 @@ body {
   font-family: var(--fuente-texto);
   color: var(--texto);
   background: linear-gradient(180deg, #ffe9f4 0%, #fff4fa 45%, #ffe3f1 100%);
-  overflow-x: hidden;
   min-height: 100vh;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
-  position: relative;
-  /* Scroll vertical suave y sin rebote lateral molesto en móvil */
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
+  /* Sin overflow aquí: el body debe fluir con el documento, no scrollear solo */
 }
 img { max-width: 100%; display: block; }
 
