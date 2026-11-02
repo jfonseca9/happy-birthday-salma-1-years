@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="preload" as="image" href="assets/salma-corazon.jpg" />
 </head>
 <body>
   <!-- Fondo decorativo animado global -->
@@ -73,7 +74,7 @@
       <button id="heart-open" class="heart-frame" aria-label="Toca para abrir la invitación">
         <div class="heart-glow"></div>
         <div class="heart-shape">
-          <img src="assets/salma-corazon.jpg" alt="Salma con su corona de princesa" class="heart-photo" />
+          <img src="assets/salma-corazon.jpg" alt="Salma con su corona de princesa" class="heart-photo" fetchpriority="high" decoding="async" />
         </div>
         <span class="heart-sparkle s1">✨</span>
         <span class="heart-sparkle s2">✨</span>
@@ -98,7 +99,7 @@
         <p class="hero-sub">cumple su <strong>primer añito</strong> 🎂</p>
         <div class="hero-photo-wrap">
           <span class="photo-ring" aria-hidden="true"></span>
-          <img src="assets/salma-plimplim.png" alt="Salma vestida de Plim Plim con su globo" class="hero-photo" />
+          <img src="assets/salma-plimplim.png" alt="Salma vestida de Plim Plim con su globo" class="hero-photo" loading="lazy" decoding="async" />
           <span class="orbit o1">🎈</span>
           <span class="orbit o2">💗</span>
           <span class="orbit o3">⭐</span>

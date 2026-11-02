@@ -48,29 +48,40 @@ img { max-width: 100%; display: block; }
 
 /* Utilidad glass */
 .glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  background: rgba(255, 255, 255, 0.82); /* fallback sólido si no hay backdrop-filter */
   border: 1px solid var(--glass-border);
   box-shadow: var(--sombra-card);
 }
+/* Solo aplicar el blur (costoso) si el navegador lo soporta de verdad */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(130%);
+  }
+}
 
 /* ============ ORBES DE FONDO ANIMADOS ============ */
-.bg-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.bg-orbs {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  contain: strict;            /* aísla el repintado del resto de la página */
+}
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(50px);
-  opacity: .55;
-  animation: orbMove 18s ease-in-out infinite alternate;
+  filter: blur(40px);
+  opacity: .5;
+  transform: translateZ(0);   /* capa propia en GPU */
+  will-change: transform;
+  animation: orbMove 22s ease-in-out infinite alternate;
 }
-.orb-1 { width: 320px; height: 320px; background: var(--rosa-4); top: -60px; left: -60px; animation-delay: 0s; }
-.orb-2 { width: 280px; height: 280px; background: var(--lila); top: 30%; right: -80px; animation-delay: 3s; }
-.orb-3 { width: 260px; height: 260px; background: var(--celeste); bottom: 10%; left: -70px; animation-delay: 6s; }
-.orb-4 { width: 300px; height: 300px; background: var(--rosa-5); bottom: -80px; right: -40px; animation-delay: 9s; }
+.orb-1 { width: 300px; height: 300px; background: var(--rosa-4); top: -60px; left: -60px; animation-delay: 0s; }
+.orb-2 { width: 260px; height: 260px; background: var(--lila); top: 30%; right: -80px; animation-delay: 3s; }
+.orb-3 { width: 240px; height: 240px; background: var(--celeste); bottom: 10%; left: -70px; animation-delay: 6s; }
+.orb-4 { width: 280px; height: 280px; background: var(--rosa-5); bottom: -80px; right: -40px; animation-delay: 9s; }
 @keyframes orbMove {
-  from { transform: translate(0,0) scale(1); }
-  to   { transform: translate(40px, -30px) scale(1.15); }
+  from { transform: translate3d(0,0,0) scale(1); }
+  to   { transform: translate3d(40px, -30px, 0) scale(1.12); }
 }
 
 /* ============ BARRA DE PROGRESO ============ */
@@ -78,11 +89,13 @@ img { max-width: 100%; display: block; }
   position: fixed;
   top: 0; left: 0;
   height: 5px;
-  width: 0%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
   z-index: 70;
   background: linear-gradient(90deg, var(--rosa-fuerte), var(--magenta), var(--lila));
   box-shadow: 0 1px 8px rgba(255,79,158,.5);
-  transition: width .1s linear;
+  will-change: transform;
 }
 
 /* ============ BOTÓN DE MÚSICA ============ */
@@ -305,9 +318,19 @@ img { max-width: 100%; display: block; }
   text-align: center;
   position: relative;
 }
+/* No renderizar secciones fuera de pantalla hasta acercarse (scroll más fluido).
+   El hero queda excluido para que se pinte de inmediato al abrir. */
+.countdown, .details, .gift, .rsvp {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
 
-[data-reveal] { opacity: 0; transform: translateY(44px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
-[data-reveal].in { opacity: 1; transform: translateY(0); }
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+}
+[data-reveal].in { opacity: 1; transform: translate3d(0, 0, 0); }
 
 .eyebrow {
   display: inline-block;
@@ -521,10 +544,22 @@ img { max-width: 100%; display: block; }
   }
 }
 
-/* Ocultar dot-nav en pantallas pequeñas para no estorbar */
+/* ====== Optimización móvil: scroll fluido ======
+   En móvil, el backdrop-filter + orbes animados + blur son la causa
+   principal del lag al hacer scroll. Los simplificamos sin perder el look. */
 @media (max-width: 520px) {
   .dot-nav { display: none; }
+
+  /* Tarjetas con fondo sólido semitransparente en vez de blur en vivo */
+  .glass {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Orbes estáticos y con menos blur: dejan de repintarse en cada frame */
+  .orb { animation: none; filter: blur(32px); opacity: .45; }
 }
+
 @media (min-width: 720px) {
   .section { padding: 90px 20px; }
 }

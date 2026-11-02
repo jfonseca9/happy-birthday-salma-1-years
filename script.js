@@ -23,16 +23,35 @@
   const music = $('#bg-music');
   const musicBtn = $('#music-toggle');
   let musicOn = false;
+  let quiereSonar = false;
+
+  // Empezar a cargar el audio cuanto antes para que esté listo al tocar
+  if (music) { try { music.load(); } catch (e) {} }
 
   function playMusic() {
     if (!music) return;
+    quiereSonar = true;
     music.volume = 0.6;
     const p = music.play();
     if (p && p.then) {
       p.then(() => { musicOn = true; musicBtn.classList.add('playing'); })
-       .catch(() => { musicOn = false; musicBtn.classList.remove('playing'); });
+       .catch(() => {
+         // Si aún no está listo, reintentar en cuanto haya datos suficientes
+         musicOn = false;
+         musicBtn.classList.remove('playing');
+         music.addEventListener('canplay', function reintentar() {
+           music.removeEventListener('canplay', reintentar);
+           if (quiereSonar) playMusic();
+         }, { once: true });
+       });
     }
   }
+  function toggleMusic() {
+    if (!music) return;
+    if (musicOn) { music.pause(); musicOn = false; quiereSonar = false; musicBtn.classList.remove('playing'); }
+    else { playMusic(); }
+  }
+  musicBtn.addEventListener('click', toggleMusic);
   function toggleMusic() {
     if (!music) return;
     if (musicOn) { music.pause(); musicOn = false; musicBtn.classList.remove('playing'); }
@@ -130,11 +149,17 @@
     if (opened) return;
     opened = true;
 
+    // La música primero y de forma síncrona con el gesto (mejor tasa de autoplay)
     playMusic();
-    lanzarGlobos();
-    lanzarConfeti();
 
+    // Revelar el contenido ya, para que esté listo mientras suben los globos
     invitation.hidden = false;
+
+    // Diferir las animaciones pesadas un frame para no bloquear el arranque del audio
+    requestAnimationFrame(() => {
+      lanzarGlobos();
+      lanzarConfeti();
+    });
 
     const espera = prefersReduced ? 500 : 4200; // deja apreciar los globos subiendo
     setTimeout(() => {
@@ -231,20 +256,26 @@
   const dots = $$('.dot');
   const secciones = dots.map((d) => document.querySelector(d.getAttribute('href')));
   let ticking = false;
+  let activaPrev = -1;
 
   function actualizarProgreso() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const alto = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = alto > 0 ? (scrollTop / alto) * 100 : 0;
-    if (progressBar) progressBar.style.width = pct + '%';
+    const ratio = alto > 0 ? Math.min(1, Math.max(0, scrollTop / alto)) : 0;
+    // scaleX en lugar de width: no provoca reflow, se anima en GPU
+    if (progressBar) progressBar.style.transform = 'scaleX(' + ratio + ')';
 
-    // Dot activo según sección más cercana al centro
-    const centro = scrollTop + window.innerHeight / 2;
+    // Dot activo según sección más cercana al centro (getBoundingClientRect = fiable con content-visibility)
+    const centro = window.innerHeight / 2;
     let activa = 0;
-    secciones.forEach((sec, i) => {
-      if (sec && sec.offsetTop <= centro) activa = i;
-    });
-    dots.forEach((d, i) => d.classList.toggle('active', i === activa));
+    for (let i = 0; i < secciones.length; i++) {
+      const sec = secciones[i];
+      if (sec && sec.getBoundingClientRect().top <= centro) activa = i;
+    }
+    if (activa !== activaPrev) {
+      dots.forEach((d, i) => d.classList.toggle('active', i === activa));
+      activaPrev = activa;
+    }
   }
 
   window.addEventListener('scroll', () => {
