@@ -10,7 +10,9 @@
     fechaEvento: new Date('2026-12-18T16:00:00-05:00'), // 18 dic 2026, 4:00 pm (Colombia)
     whatsappNumero: '573228518697',                      // +57 322 851 8697
     direccion: 'Salón de eventos Tu Fiesta, Cra 42h #84b-107, Plaza 85, Barranquilla',
-    mapsUrl: 'https://maps.app.goo.gl/qVVEtSip1xRqS7B37'  // ubicación exacta (Plaza 85)
+    // Formato oficial de la API de Maps: funciona igual en la app y el navegador,
+    // en Android e iOS. Coordenadas exactas del lugar (Plaza 85).
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=10.998117%2C-74.8225949'
   };
 
   const $ = (sel) => document.querySelector(sel);
