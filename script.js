@@ -166,7 +166,7 @@
       welcome.classList.add('hide');
       setTimeout(() => {
         welcome.style.display = 'none';
-        document.body.classList.remove('welcome-lock'); // liberar el scroll
+        liberarScroll();
         if (dotNav) dotNav.classList.add('show');
         revealOnScroll();
         actualizarProgreso();
@@ -174,9 +174,22 @@
     }, espera);
   }
 
+  function bloquearScroll() {
+    document.documentElement.classList.add('welcome-lock');
+    document.body.classList.add('welcome-lock');
+  }
+  function liberarScroll() {
+    document.documentElement.classList.remove('welcome-lock');
+    document.body.classList.remove('welcome-lock');
+    // Salvaguarda: limpiar cualquier estilo inline heredado que bloquee el scroll
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+  }
+
   heartBtn.addEventListener('click', abrirInvitacion);
-  // Congelar el documento mientras está la portada (evita rebote/salto táctil en móvil)
-  document.body.classList.add('welcome-lock');
+  // Bloquear el scroll de fondo mientras está la portada
+  bloquearScroll();
 
   /* ============================================================
      3) CUENTA REGRESIVA

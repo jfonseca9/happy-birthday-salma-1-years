@@ -172,15 +172,12 @@ img { max-width: 100%; display: block; }
 }
 .dot:hover::after { opacity: 1; }
 
-/* Mientras la portada está activa, congelar el documento (evita el rebote táctil
-   y el "salto" por la barra de direcciones del navegador móvil) */
-body.welcome-lock {
-  position: fixed;
-  inset: 0;
-  width: 100%;
+/* Mientras la portada está activa, bloquear el scroll de fondo.
+   Solo overflow:hidden (NO position:fixed) para no romper el scroll al liberar. */
+html.welcome-lock, body.welcome-lock {
   overflow: hidden;
-  overscroll-behavior: none;
   touch-action: none;
+  overscroll-behavior: none;
 }
 
 /* ============ PANTALLA DE BIENVENIDA ============ */
@@ -284,18 +281,75 @@ body.welcome-lock {
 .s3 { bottom: 14%; left: 50%; transform: translateX(-50%); animation-delay: 1.1s; font-size: 1.8rem; }
 @keyframes sparkle { 0%,100% { opacity:.4; transform: scale(.8);} 50% { opacity:1; transform: scale(1.2);} }
 
-.welcome-tap { margin-top: 26px; }
+.welcome-tap { margin-top: 30px; display: flex; justify-content: center; }
+
+/* Botón "toca para abrir" moderno: pill con degradado, brillo y pulso */
 .tap-pill {
-  display: inline-block;
-  background: var(--blanco);
-  color: var(--texto-suave);
-  font-weight: 600;
-  padding: 10px 20px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 14px 13px 22px;
   border-radius: 999px;
-  box-shadow: var(--sombra-suave);
-  animation: tapBounce 1.6s ease-in-out infinite;
+  background: linear-gradient(135deg, var(--rosa-fuerte), var(--magenta));
+  color: #fff;
+  font-family: var(--fuente-titulo);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: .2px;
+  box-shadow: 0 10px 26px rgba(255,79,158,.45), inset 0 1px 0 rgba(255,255,255,.35);
+  overflow: hidden;
+  animation: tapFloat 2.4s ease-in-out infinite;
 }
-@keyframes tapBounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
+/* Brillo que recorre el botón */
+.tap-pill::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 45%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: skewX(-18deg);
+  animation: tapShine 2.8s ease-in-out infinite;
+}
+.tap-text { position: relative; z-index: 2; }
+
+/* Punto latiente con anillo que irradia (indica "toca aquí") */
+.tap-dot {
+  position: relative;
+  z-index: 2;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
+}
+.tap-ring {
+  position: absolute;
+  left: 17px; top: 50%;
+  width: 10px; height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.9);
+  animation: tapRipple 1.8s ease-out infinite;
+}
+/* Flecha en círculo */
+.tap-arrow {
+  position: relative;
+  z-index: 2;
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+  color: #fff;
+  animation: tapArrow 1.4s ease-in-out infinite;
+}
+
+@keyframes tapFloat { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-7px);} }
+@keyframes tapShine { 0% { left: -60%; } 55%,100% { left: 130%; } }
+@keyframes tapRipple {
+  0%   { transform: scale(1); opacity: .9; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+@keyframes tapArrow { 0%,100% { transform: translateX(0);} 50% { transform: translateX(4px);} }
 
 /* ============ GLOBOS QUE VUELAN ============ */
 .balloon-layer { position: absolute; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
@@ -441,7 +495,8 @@ body.welcome-lock {
 @keyframes orbitFloat { 0%,100% { transform: translateY(0) rotate(-8deg);} 50% { transform: translateY(-14px) rotate(8deg);} }
 
 .scroll-hint { margin-top: 12px; color: var(--texto-suave); font-weight: 600; }
-.arrow { display: inline-block; animation: tapBounce 1.6s ease-in-out infinite; }
+.arrow { display: inline-block; animation: arrowBounce 1.6s ease-in-out infinite; }
+@keyframes arrowBounce { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-6px);} }
 
 /* COUNTDOWN */
 .countdown-grid {
@@ -586,6 +641,8 @@ body.welcome-lock {
   .floatie.f3, .floatie.f5 { display: none; }
   /* Sparkles sin animación (son decorativos) */
   .heart-sparkle { animation: none; }
+  /* El brillo que recorre el botón es costoso en móvil; lo quitamos */
+  .tap-pill::before { display: none; }
 }
 
 @media (min-width: 720px) {
