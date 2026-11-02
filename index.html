@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffd1e8" />
+  <meta name="description" content="Invitación al primer añito de Salma — Fiesta temática Plim Plim 💕🤡" />
+  <title>Salma cumple 1 añito 🎀🤡</title>
+
+  <!-- Open Graph para compartir por WhatsApp -->
+  <meta property="og:title" content="Salma cumple 1 añito 🎀" />
+  <meta property="og:description" content="¡Estás invitado a la fiesta de Salma con Plim Plim! 🤡💕" />
+  <meta property="og:image" content="assets/salma-corazon.jpg" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Fondo decorativo animado global -->
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <span class="orb orb-4"></span>
+  </div>
+
+  <!-- Barra de progreso de scroll -->
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Audio de fondo -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="assets/ronda.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Botón de música flotante -->
+  <button id="music-toggle" class="music-toggle" aria-label="Activar o silenciar música" title="Música">
+    <span class="music-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+        <path d="M9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="6" cy="18" r="3"/>
+        <circle cx="16" cy="16" r="3"/>
+      </svg>
+    </span>
+  </button>
+
+  <!-- Navegación por puntos (dots) -->
+  <nav class="dot-nav" id="dot-nav" aria-label="Navegación de secciones">
+    <a href="#hero" class="dot" data-label="Inicio"></a>
+    <a href="#countdown" class="dot" data-label="Cuenta regresiva"></a>
+    <a href="#details" class="dot" data-label="Detalles"></a>
+    <a href="#gift" class="dot" data-label="Regalos"></a>
+    <a href="#rsvp" class="dot" data-label="Confirmar"></a>
+  </nav>
+
+  <!-- ============ PANTALLA DE BIENVENIDA ============ -->
+  <section id="welcome" class="welcome" aria-label="Pantalla de bienvenida">
+    <div class="welcome-content">
+      <div class="welcome-floaties" aria-hidden="true">
+        <span class="floatie f1">🎈</span>
+        <span class="floatie f2">💗</span>
+        <span class="floatie f3">⭐</span>
+        <span class="floatie f4">🤡</span>
+        <span class="floatie f5">🌸</span>
+      </div>
+
+      <p class="welcome-greet">¡Hola! soy Salma 🤡💕</p>
+      <h1 class="welcome-title">Tengo algo <br/>que contarte...</h1>
+
+      <!-- Marco de corazón con la foto -->
+      <button id="heart-open" class="heart-frame" aria-label="Toca para abrir la invitación">
+        <div class="heart-glow"></div>
+        <div class="heart-shape">
+          <img src="assets/salma-corazon.jpg" alt="Salma con su corona de princesa" class="heart-photo" />
+        </div>
+        <span class="heart-sparkle s1">✨</span>
+        <span class="heart-sparkle s2">✨</span>
+        <span class="heart-sparkle s3">💖</span>
+      </button>
+
+      <p class="welcome-tap"><span class="tap-pill">👆 Toca el corazón para abrir</span></p>
+    </div>
+
+    <!-- Capa de globos que vuelan al hacer click -->
+    <div id="balloon-layer" class="balloon-layer" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============ CONTENIDO PRINCIPAL ============ -->
+  <main id="invitation" class="invitation" hidden>
+
+    <!-- HERO -->
+    <section id="hero" class="hero section" data-reveal>
+      <div class="hero-inner glass">
+        <span class="badge">¡Estás invitado! 🎉</span>
+        <h2 class="hero-name" data-text="Salma">Salma</h2>
+        <p class="hero-sub">cumple su <strong>primer añito</strong> 🎂</p>
+        <div class="hero-photo-wrap">
+          <span class="photo-ring" aria-hidden="true"></span>
+          <img src="assets/salma-plimplim.png" alt="Salma vestida de Plim Plim con su globo" class="hero-photo" />
+          <span class="orbit o1">🎈</span>
+          <span class="orbit o2">💗</span>
+          <span class="orbit o3">⭐</span>
+        </div>
+        <p class="scroll-hint">desliza para ver más <span class="arrow">⬇️</span></p>
+      </div>
+    </section>
+
+    <!-- CUENTA REGRESIVA -->
+    <section id="countdown" class="countdown section" data-reveal>
+      <span class="eyebrow">⏳ El gran día se acerca</span>
+      <h3 class="section-title">Falta poco <span class="wave">💕</span></h3>
+      <p class="section-text">para la gran fiesta de Salma</p>
+      <div class="countdown-grid" id="countdown-grid" role="timer" aria-live="polite">
+        <div class="count-box glass"><span class="count-num" id="cd-days">00</span><span class="count-label">Días</span></div>
+        <div class="count-box glass"><span class="count-num" id="cd-hours">00</span><span class="count-label">Horas</span></div>
+        <div class="count-box glass"><span class="count-num" id="cd-mins">00</span><span class="count-label">Min</span></div>
+        <div class="count-box glass"><span class="count-num" id="cd-secs">00</span><span class="count-label">Seg</span></div>
+      </div>
+    </section>
+
+    <!-- CUÁNDO Y DÓNDE — TIMELINE -->
+    <section id="details" class="details section" data-reveal>
+      <span class="eyebrow">🎀 Pase a la fiesta</span>
+      <h3 class="section-title">¿Cuándo y dónde?</h3>
+
+      <ol class="timeline">
+        <li class="tl-item" data-reveal>
+          <span class="tl-dot">📅</span>
+          <div class="tl-content glass">
+            <h4>La fecha</h4>
+            <p><strong>Viernes 18 de diciembre</strong> de 2026</p>
+          </div>
+        </li>
+        <li class="tl-item" data-reveal>
+          <span class="tl-dot">⏰</span>
+          <div class="tl-content glass">
+            <h4>La hora</h4>
+            <p><strong>4:00 p. m.</strong> · ¡te esperamos puntual!</p>
+          </div>
+        </li>
+        <li class="tl-item" data-reveal>
+          <span class="tl-dot">📍</span>
+          <div class="tl-content glass">
+            <h4>El lugar</h4>
+            <p><strong>Salón de eventos Tu Fiesta</strong><br/>Cra 42h #84b-107 · Plaza 85 · Barranquilla</p>
+            <a id="map-btn" class="map-btn" href="#" target="_blank" rel="noopener">🗺️ Ver ubicación en el mapa</a>
+          </div>
+        </li>
+        <li class="tl-item" data-reveal>
+          <span class="tl-dot">👗</span>
+          <div class="tl-content glass">
+            <h4>Dress code</h4>
+            <p>Ven lindo y cómodo · ¡listos para celebrar!</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- REGALOS -->
+    <section id="gift" class="gift section" data-reveal>
+      <span class="eyebrow">💝 Un detallito</span>
+      <h3 class="section-title">¿Regalos?</h3>
+      <div class="gift-card glass">
+        <span class="gift-emoji">🎁</span>
+        <p>Tu presencia es lo más importante, pero si quieres consentir a Salma, un lindo regalo será bienvenido 💝</p>
+      </div>
+    </section>
+
+    <!-- CONFIRMACIÓN -->
+    <section id="rsvp" class="rsvp section" data-reveal>
+      <span class="eyebrow">💌 Te esperamos</span>
+      <h3 class="section-title">¿Nos acompañas?</h3>
+      <p class="section-text">Confírmanos tu asistencia</p>
+      <div class="rsvp-card glass">
+        <p class="rsvp-note">A Salma le encantaría tenerte en su primer cumpleaños 🤡🌸<br/>¡Déjanos saber si vienes!</p>
+
+        <div class="rsvp-form">
+          <label class="field">
+            <span>Tu nombre</span>
+            <input type="text" id="guest-name" placeholder="Ej: Familia Gómez" autocomplete="name" />
+          </label>
+          <label class="field">
+            <span>¿Cuántas personas asisten?</span>
+            <div class="stepper">
+              <button type="button" class="step-btn" id="minus" aria-label="Menos personas">−</button>
+              <input type="number" id="guest-count" min="1" max="20" value="1" inputmode="numeric" readonly />
+              <button type="button" class="step-btn" id="plus" aria-label="Más personas">+</button>
+            </div>
+          </label>
+        </div>
+
+        <a id="whatsapp-btn" class="whatsapp-btn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+            <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.82 9.82 0 001.511 5.26l-.999 3.648 3.978-.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.074-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
+          Confirmar por WhatsApp
+        </a>
+        <p class="rsvp-hint">Se abrirá WhatsApp con tu mensaje listo 💬</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-plim" aria-hidden="true">🤡 💗 🎈 💗 🤡</div>
+      <p>Con amor, para el primer añito de <strong>Salma</strong> 🌸</p>
+      <p class="footer-small">18 · 12 · 2026</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
