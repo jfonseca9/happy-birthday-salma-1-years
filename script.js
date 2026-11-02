@@ -145,6 +145,22 @@
     }
   }
 
+  let cerrarTimer = null;
+  let cerrada = false;
+
+  function cerrarPortada() {
+    if (cerrada) return;
+    cerrada = true;
+    if (cerrarTimer) { clearTimeout(cerrarTimer); cerrarTimer = null; }
+    welcome.classList.add('hide');
+    setTimeout(() => {
+      welcome.style.display = 'none';
+      if (dotNav) dotNav.classList.add('show');
+      revealOnScroll();
+      actualizarProgreso();
+    }, 600);
+  }
+
   function abrirInvitacion() {
     if (opened) return;
     opened = true;
@@ -161,35 +177,14 @@
       lanzarConfeti();
     });
 
-    const espera = prefersReduced ? 500 : 4200; // deja apreciar los globos subiendo
-    setTimeout(() => {
-      welcome.classList.add('hide');
-      setTimeout(() => {
-        welcome.style.display = 'none';
-        liberarScroll();
-        if (dotNav) dotNav.classList.add('show');
-        revealOnScroll();
-        actualizarProgreso();
-      }, 750);
-    }, espera);
-  }
-
-  function bloquearScroll() {
-    document.documentElement.classList.add('welcome-lock');
-    document.body.classList.add('welcome-lock');
-  }
-  function liberarScroll() {
-    document.documentElement.classList.remove('welcome-lock');
-    document.body.classList.remove('welcome-lock');
-    // Salvaguarda: limpiar cualquier estilo inline heredado que bloquee el scroll
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.position = '';
+    // La portada se cierra sola tras un momento (deja ver los globos)
+    const espera = prefersReduced ? 400 : 2200;
+    cerrarTimer = setTimeout(cerrarPortada, espera);
   }
 
   heartBtn.addEventListener('click', abrirInvitacion);
-  // Bloquear el scroll de fondo mientras está la portada
-  bloquearScroll();
+  // Si el usuario vuelve a tocar la portada tras abrirla, se cierra al instante
+  welcome.addEventListener('click', () => { if (opened) cerrarPortada(); });
 
   /* ============================================================
      3) CUENTA REGRESIVA

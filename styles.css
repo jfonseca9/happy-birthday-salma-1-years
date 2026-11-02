@@ -172,14 +172,6 @@ img { max-width: 100%; display: block; }
 }
 .dot:hover::after { opacity: 1; }
 
-/* Mientras la portada está activa, bloquear el scroll de fondo.
-   Solo overflow:hidden (NO position:fixed) para no romper el scroll al liberar. */
-html.welcome-lock, body.welcome-lock {
-  overflow: hidden;
-  touch-action: none;
-  overscroll-behavior: none;
-}
-
 /* ============ PANTALLA DE BIENVENIDA ============ */
 .welcome {
   position: fixed;
@@ -189,9 +181,7 @@ html.welcome-lock, body.welcome-lock {
   place-items: center;
   text-align: center;
   padding: 24px;
-  overscroll-behavior: contain;
   -webkit-tap-highlight-color: transparent;
-  will-change: opacity, transform;
   background:
     radial-gradient(circle at 20% 15%, var(--lila) 0%, transparent 45%),
     radial-gradient(circle at 85% 20%, var(--celeste) 0%, transparent 40%),
